@@ -54,7 +54,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="Password" class="input-text @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
+                                    <input type="password" name="password" class="input-text @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
                                     <i class="fa fa-lock"></i>
                                     <span class="focus-border"></span>
                                     @error('password')

@@ -11,7 +11,9 @@
   <meta name="description" content="Wieldy - A fully responsive, HTML5 based admin template">
   <meta name="keywords" content="Responsive, HTML5, admin theme, business, professional, jQuery, web design, CSS3, sass">
   <!-- /meta tags -->
-  <title>Wieldy - Admin Dashboard</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Inventory Management System - @yield('title')</title>
 
   <!-- Site favicon -->
   <link rel="shortcut icon" href="{{ asset('assets/default/assets/images/favicon.ico') }}" type="image/x-icon">
@@ -30,11 +32,15 @@
   <!-- Perfect Scrollbar stylesheet -->
   <link rel="stylesheet" href="{{ asset('assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css') }}">
   <!-- /perfect scrollbar stylesheet -->
+  {{-- datatable --}}
+  <link rel="stylesheet" href="{{ asset('assets/default/assets/css/datatables.bundle7.0.8.css') }}">
 
   <!-- Load Styles -->
 
   <link rel="stylesheet" href="{{ asset('assets/default/assets/css/lite-style-1.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/default/assets/css/custom.css') }}">
   <!-- /load styles -->
+  @stack('stylesheet')
 
 </head>
 <body class="dt-sidebar--fixed dt-header--fixed">
@@ -99,16 +105,20 @@
 
 <!-- masonry script -->
 <script src="{{ asset('assets/node_modules/masonry-layout/dist/masonry.pkgd.min.js') }}"></script>
-<script src="{{ asset('assets/node_modules/sweetalert2/dist/sweetalert2.js') }}"></script>
 
 {{-- others js --}}
 <script src="{{ asset('assets/default/assets/js/dropify.min.js') }}"></script>
 <script src="{{ asset('assets/default/assets/js/jquery.nestable.min.js') }}"></script>
 <script src="{{ asset('assets/default/assets/js/select2.min.js') }}"></script>
-
+<script src="{{ asset('assets/default/assets/js/sweetalert2@11.js') }}"></script>
 <script src="{{ asset('assets/node_modules/chart.js/dist/Chart.min.js') }}"></script>
+<script src="{{ asset('assets/default/assets/js/datatables.bundle7.0.8.js') }}"></script>
 <script src="{{ asset('assets/default/assets/js/script.js') }}"></script>
-<script src="{{ asset('assets/default/assets/js/custom/charts/dashboard-crypto.js') }}"></script>
+<script src="{{ asset('assets/default/assets/js/custom.js') }}"></script>
+<script>
+    let _token = '{!! csrf_token() !!}'
+</script>
+@stack('script')
 </body>
 
 <!-- Mirrored from wieldy-html.g-axon.work/default/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 19 Aug 2020 08:14:49 GMT -->
