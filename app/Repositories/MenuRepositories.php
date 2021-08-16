@@ -10,7 +10,7 @@ class MenuRepositories extends BaseRepositories{
 
     public function __construct(Menu $model)
     {
-        $this->model = $model; 
+        $this->model = $model;
     }
 
     public function setMenuName($menu_name){
@@ -55,5 +55,10 @@ class MenuRepositories extends BaseRepositories{
 
     public function countAll(){
         return $this->model::toBase()->get()->count();
+    }
+
+    public function withMenuItems($id)
+    {
+        return $this->model->with('menuItems')->findOrFail($id);
     }
 }

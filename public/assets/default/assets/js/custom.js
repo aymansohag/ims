@@ -1,7 +1,9 @@
 // =============== Dropify ===============
 $('.dropify').dropify();
 // =============== Select two ===============
-$('.select').select2();
+$('.selectpicker').selectpicker({
+    dropupAuto: false
+});
 // =================== Menu Modal Show ==================
 
 function showFormModal(modal_title,btn_text){
@@ -10,7 +12,7 @@ function showFormModal(modal_title,btn_text){
     $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
     $('#store_or_update_form').find('.error').remove();
     $('.dropify-clear').trigger('click');
-    $('#store_or_update_form .select').val('').trigger('change');
+    $('#store_or_update_form .selectpicker').selectpicker('refresh');
     $('#store_or_update_modal').modal('show');
 
     $('#store_or_update_modal .modal-title').html('<i class="fas fa-plus-square"></i> '+modal_title);
@@ -63,7 +65,9 @@ function storeOrUpdateFormData(table,url,method,formData){
             $('#store_or_update_form').find('.error').remove();
             if(data.status == false){
                 $.each(data.errors, function (key, value) {
-                    $('#store_or_update_form #'+key).addClass('is-invalid');
+                    $('#store_or_update_form input#'+key).addClass('is-invalid');
+                    $('#store_or_update_form textarea#'+key).addClass('is-invalid');
+                    $('#store_or_update_form select#'+key).parent().addClass('is-invalid');
                     $('#store_or_update_form #'+key).parent().append('<small class="error text-danger d-block">'+value+'</small>');
                  });
             }else{

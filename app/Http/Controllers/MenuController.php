@@ -114,4 +114,9 @@ class MenuController extends BaseController
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
         }
     }
+
+    public function orderItem(Request $request){
+        $menu_item_order = json_decode($request->input('order'));
+        $this->service->orderMenu($menu_item_order, null);
+    }
 }

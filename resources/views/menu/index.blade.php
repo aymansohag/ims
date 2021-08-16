@@ -43,7 +43,19 @@
 
                 <!-- Card Body -->
                 <div class="dt-card__body">
-
+                    {{-- Form Filter --}}
+                    <form id="form_filter" class="mb-5">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="menu_name">Menu Name</label>
+                                <input type="text" class="form-control" name="menu_name" id="menu_name" placeholder="Enter Menu Name">
+                            </div>
+                            <div class="col-md-8" style="margin-top: 20px">
+                                <button id="btn_filter" type="button" class="btn btn-primary btn-sm float-right" data-toggle="tooptip" data-placement="top" data-original-title="Filter Data"><i class="fas fa-search"></i></button>
+                                <button id="btn_reset" type="button" class="btn btn-danger btn-sm float-right mr-2" data-toggle="tooptip" data-placement="top" data-original-title="Reset Data"><i class="fas fa-redo-alt"></i></button>
+                            </div>
+                        </div>
+                    </form>
                     <!-- Tables -->
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
@@ -112,6 +124,7 @@
                 "url": "{{ route('menu.datatable.data') }}",
                 "type": "POST",
                 "data": function (data) {
+                    data.menu_name =$('#form_filter #menu_name').val();
                     data._token = _token;
                 }
             },
@@ -273,15 +286,13 @@
 
 
     // ===================Data table filter===============
-    $(document).on('click', '#btnFilter', function () {
+    $(document).on('click', '#btn_filter', function () {
         table.ajax.reload();
     });
-    $(document).on('click', '#btnReset', function () {
-        $('#formFilter')[0].reset();
+    $(document).on('click', '#btn_reset', function () {
+        $('#form_filter')[0].reset();
         table.ajax.reload();
     });
-
-
 
 
 

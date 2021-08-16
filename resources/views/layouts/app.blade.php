@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="{{ asset('assets/default/assets/css/all.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/default/assets/css/dropify.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/default/assets/css/jquery.nestable.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/default/assets/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/default/assets/css/bootstrap-select.min.css') }}">
 
   <!-- Perfect Scrollbar stylesheet -->
   <link rel="stylesheet" href="{{ asset('assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css') }}">
@@ -109,7 +109,7 @@
 {{-- others js --}}
 <script src="{{ asset('assets/default/assets/js/dropify.min.js') }}"></script>
 <script src="{{ asset('assets/default/assets/js/jquery.nestable.min.js') }}"></script>
-<script src="{{ asset('assets/default/assets/js/select2.min.js') }}"></script>
+<script src="{{ asset('assets/default/assets/js/bootstrap-select.min.js') }}"></script>
 <script src="{{ asset('assets/default/assets/js/sweetalert2@11.js') }}"></script>
 <script src="{{ asset('assets/node_modules/chart.js/dist/Chart.min.js') }}"></script>
 <script src="{{ asset('assets/default/assets/js/datatables.bundle7.0.8.js') }}"></script>

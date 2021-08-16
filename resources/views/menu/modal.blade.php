@@ -20,7 +20,7 @@
                 <div class="row">
                     <input type="hidden" name="update_id" id="update_id">
                     <x-forms.textbox labelName="Menu Name" name="menu_name" required="required" col="col-md-12" placeholder="Enter menu name"/>
-                    <x-forms.selectbox labelName="Deletable" name="deletable" required="required" col="col-md-12" class="select">
+                    <x-forms.selectbox labelName="Deletable" name="deletable" required="required" col="col-md-12" class="selectpicker">
                         @foreach (DELETABLE as $key => $item)
                             <option value="{{ $key }}">{{ $item }}</option>
                         @endforeach
@@ -32,7 +32,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm" id="save_btn"></button>
+                <button type="button" class="btn btn-primary btn-sm" style="padding: 9px 30px" id="save_btn"></button>
             </div>
         </form>
         <!-- /modal footer -->

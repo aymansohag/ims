@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ModuleController;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -30,5 +31,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('edit', [MenuController::class, 'edit']) -> name('edit');
         Route::post('delete', [MenuController::class, 'delete']) -> name('delete');
         Route::post('bulk-delete', [MenuController::class, 'bulkDelete']) -> name('bulk.delete');
+        Route::post('order/{id}', [MenuController::class, 'orderItem']) -> name('order');
+
+        // Module Route
+        Route::get('module/{id}', [ModuleController::class, 'index'])-> name('module');
+
+        Route::group(['prefix' => 'module', 'as' => 'module.'], function () {
+            Route::get('create/{menu}', [ModuleController::class, 'create'])-> name('create');
+            Route::post('store-or-update', [ModuleController::class, 'storeOrUpdate'])-> name('store.or.update');
+            Route::get('{menu}/edit/{module}', [ModuleController::class, 'edit'])-> name('edit');
+            Route::delete('delete/{module}', [ModuleController::class, 'destroy'])-> name('delete');
+        });
     });
 });

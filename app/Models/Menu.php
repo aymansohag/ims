@@ -10,4 +10,9 @@ class Menu extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function menuItems()
+    {
+        return $this->hasMany(Module::class)->doesntHave('parent')->orderBy('order','asc');
+    }
 }
