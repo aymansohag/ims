@@ -30,7 +30,7 @@
                 </div>
                 <!-- /entry heading -->
 
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Menu', 'Save')">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Permission', 'Save')">
                     <i class="fas fa-plus-square"></i>
                     Add New
                 </button>
@@ -47,10 +47,22 @@
                     <form id="form_filter" class="mb-5">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="menu_name">Menu Name</label>
-                                <input type="text" class="form-control" name="menu_name" id="menu_name" placeholder="Enter Menu Name">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Name...">
                             </div>
-                            <div class="col-md-8" style="margin-top: 20px">
+                            <div class="col-md-4">
+                                <label for="module_id">Module</label>
+                                <select name="module_id" id="module_id" class="form-control selectpicker" data-live-search="true"
+                                data-live-search-placeholder="Search" title="Choose one of the following">
+                                    <option value="">Select Please</option>
+                                    @if (!empty($data['modules']))
+                                        @foreach ($data['modules'] as $key => $item)
+                                            <option value="{{ $key }}">{{ $item }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-4" style="margin-top: 20px">
                                 <button id="btn_filter" type="button" class="btn btn-primary btn-sm float-right" data-toggle="tooptip" data-placement="top" data-original-title="Filter Data"><i class="fas fa-search"></i></button>
                                 <button id="btn_reset" type="button" class="btn btn-danger btn-sm float-right mr-2" data-toggle="tooptip" data-placement="top" data-original-title="Reset Data"><i class="fas fa-redo-alt"></i></button>
                             </div>
@@ -68,8 +80,9 @@
                                     </div>
                                 </th>
                                 <th>Sl</th>
-                                <th>Menu Name</th>
-                                <th>Deletable</th>
+                                <th>Module</th>
+                                <th>Permission name</th>
+                                <th>Permission Slug</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -94,7 +107,8 @@
     <!-- /grid -->
 
 </div>
-@include('menu.modal')
+@include('permission.modal')
+@include('permission.edit-modal')
 @endsection
 @push('script')
 <script>
@@ -121,20 +135,21 @@
                 zeroRecords: '<strong class="text-danger">No Data Found</strong>'
             },
             "ajax": {
-                "url": "{{ route('menu.datatable.data') }}",
+                "url": "{{ route('menu.module.permission.datatable.data') }}",
                 "type": "POST",
                 "data": function (data) {
-                    data.menu_name =$('#form_filter #menu_name').val();
-                    data._token = _token;
+                    data.name      = $('#form_filter #name').val();
+                    data.module_id = $('#form_filter #module_id').val();
+                    data._token    = _token;
                 }
             },
             "columnDefs": [{
-                    "targets": [0, 4],
+                    "targets": [0, 5],
                     "orderable": false,
                     "className": "text-center"
                 },
                 {
-                    "targets": [1, 3],
+                    "targets": [1],
                     "className": "text-center"
                 },
             ],
@@ -152,7 +167,7 @@
                     "extend": 'print',
                     'text': 'Print',
                     'className': 'btn btn-secondary btn-sm text-white',
-                    "title": "Menu List",
+                    "title": "Permission List",
                     "orientation": "landscape", //portrait
                     "pageSize": "A4", //A3,A5,A6,legal,letter
                     "exportOptions": {
@@ -168,8 +183,8 @@
                     "extend": 'csv',
                     'text': 'CSV',
                     'className': 'btn btn-secondary btn-sm text-white',
-                    "title": "Menu List",
-                    "filename": "menu-list",
+                    "title": "Permission List",
+                    "filename": "permission-list",
                     "exportOptions": {
                         columns: function (index, data, node) {
                             return table.column(index).visible();
@@ -180,8 +195,8 @@
                     "extend": 'excel',
                     'text': 'Excel',
                     'className': 'btn btn-secondary btn-sm text-white',
-                    "title": "Menu List",
-                    "filename": "menu-list",
+                    "title": "Permission List",
+                    "filename": "permission-list",
                     "exportOptions": {
                         columns: function (index, data, node) {
                             return table.column(index).visible();
@@ -192,8 +207,8 @@
                     "extend": 'pdf',
                     'text': 'PDF',
                     'className': 'btn btn-secondary btn-sm text-white',
-                    "title": "Menu List",
-                    "filename": "menu-list",
+                    "title": "Permission List",
+                    "filename": "permission-list",
                     "orientation": "landscape", //portrait
                     "pageSize": "A4", //A3,A5,A6,legal,letter
                     "exportOptions": {
@@ -215,7 +230,7 @@
     $(document).on('click', '#save_btn', function(){
         var form = document.getElementById('store_or_update_form');
         var formData = new FormData(form);
-        var url = "{{ route('menu.store.or.update') }}";
+        var url = "{{ route('menu.module.permission.store') }}";
         var id = $('update_id').val();
         var method;
         if (id){
@@ -223,37 +238,73 @@
         }else{
             method = 'add';
         }
-        storeOrUpdateFormData(table,url,method,formData);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function(){
+                $('#save_btn').addClass('kt-spinner kt-spinner--mid kt-spinner--light');
+            },
+            complete: function(){
+                $('#save_btn').removeClass('kt-spinner kt-spinner--mid kt-spinner--light');
+            },
+            success: function (data) {
+                // validation form
+                $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
+                $('#store_or_update_form').find('.error').remove();
+                if(data.status == false){
+                    $.each(data.errors, function (key, value) {
+                        var key = key.split('.').join('_');
+                        $('#store_or_update_form select#'+key).parent().addClass('is-invalid');
+                        $('#store_or_update_form #'+key).parent().append('<small class="error text-danger d-block">'+value+'</small>');
+                        $('#store_or_update_form table').find('#'+key).addClass('is-invalid');
+                    });
+                }else{
+                    notification(data.status, data.message);
+                    if(data.status == 'success'){
+                        if(method == 'update'){
+                            table.ajax.reload(null,false);
+                        }else{
+                            table.ajax.reload();
+                        }
+                        $('#store_or_update_modal').modal('hide');
+                    }
+                }
+            },
+            error: function(xhr, ajaxOption, thrownError){
+                console.log(thrownError+'\r\n'+xhr.statusText+'\r\n'+xhr.responseText);
+                console.log('errors');
+            },
+        });
     });
 
     //=================== Edit Data ======================
 
     $(document).on('click', '.edit_data', function () {
         let id = $(this).data('id');
-        $('#store_or_update_form')[0].reset();
-        $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
-        $('#store_or_update_form').find('.error').remove();
-        $('#store_or_update_form .selectpicker').val('');
-        $('#store_or_update_form .selectpicker').selectpicker('refresh');
+        $('#update_form #module_id.selectpicker').selectpicker('refresh');
         if(id){
             $.ajax({
                 type: "POST",
-                url: "{{ route('menu.edit') }}",
+                url: "{{ route('menu.module.permission.edit') }}",
                 data: {
                     id: id,
                     _token: _token
                 },
                 dataType: "json",
                 success: function (data) {
-                    $('#store_or_update_form #update_id').val(data.data.id);
-                    $('#store_or_update_form #menu_name').val(data.data.menu_name);
-                    $('#store_or_update_form #deletable').val(data.data.deletable).trigger('change');
-                    $('#store_or_update_form #deletable.selectpicker').selectpicker('refresh');
-
-
-                    $('#store_or_update_modal .modal-title').html('<i class="fas fa-edit"></i> <span>Edit '+data.data.menu_name+'</span>');
-                    $('#store_or_update_modal #save_btn').text('Update');
-                    $('#store_or_update_modal').modal('show');
+                    $('#update_form #update_id').val(data.data.id);
+                    $('#update_form #name').val(data.data.name);
+                    $('#update_form #slug').val(data.data.slug);
+                    $('#update_form #module_id.selectpicker').selectpicker('refresh');
+                    $('#update_modal .modal-title').html('<i class="fas fa-edit"></i> <span>Edit '+data.data.name+'</span>');
+                    $('#update_modal #update_btn').text('Update');
+                    $('#update_modal').modal('show');
                 },
                 error: function(xhr, ajaxOption, thrownError){
                     console.log(thrownError+'\r\n'+xhr.statusText+'\r\n'+xhr.responseText);
@@ -262,14 +313,63 @@
         }
     });
 
+    // ============== form update btn click================
+    $(document).on('click', '#update_btn', function(){
+        var form = document.getElementById('update_form');
+        var formData = new FormData(form);
+        var url = "{{ route('menu.module.permission.update') }}";
+        var id = $('update_id').val();
+        var method = 'update';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function(){
+                $('#update_btn').addClass('kt-spinner kt-spinner--mid kt-spinner--light');
+            },
+            complete: function(){
+                $('#update_btn').removeClass('kt-spinner kt-spinner--mid kt-spinner--light');
+            },
+            success: function (data) {
+                // validation form
+                $('#update_form').find('.is-invalid').removeClass('is-invalid');
+                $('#update_form').find('.error').remove();
+                if(data.status == false){
+                    $.each(data.errors, function (key, value) {
+                        var key = key.split('.').join('_');
+                        $('#update_form select#'+key).parent().addClass('is-invalid');
+                        $('#update_form #'+key).parent().append('<small class="error text-danger d-block">'+value+'</small>');
+                    });
+                }else{
+                    notification(data.status, data.message);
+                    if(data.status == 'success'){
+                        if(method == 'update'){
+                            table.ajax.reload(null,false);
+                        }
+                        $('#update_modal').modal('hide');
+                    }
+                }
+            },
+            error: function(xhr, ajaxOption, thrownError){
+                console.log(thrownError+'\r\n'+xhr.statusText+'\r\n'+xhr.responseText);
+                console.log('errors');
+            },
+        });
+    });
+
     //================== Delete Data ======================
 
     $(document).on('click', '.delete_data', function () {
         let id = $(this).data('id');
-        let menu_name = $(this).data('menu_name');
+        let name = $(this).data('name');
         let row = table.row($(this).parent('tr'));
-        let url = "{{ route('menu.delete') }}";
-        deleteData(id,url,table,row,menu_name)
+        let url = "{{ route('menu.module.permission.delete') }}";
+        deleteData(id,url,table,row,name)
     });
 
     // ============== Multiple data delete ================
@@ -285,10 +385,39 @@
         if(ids.length == 0){
             flashMessage('error', 'Please checked at list one row');
         }else{
-            let url = "{{ route('menu.bulk.delete') }}";
+            let url = "{{ route('menu.module.permission.bulk.delete') }}";
             bulkDelete(ids,url,table,rows);
         }
     }
+
+    //=============== Dynamic permission field ================
+
+    var count = 1;
+
+    function dynamicPermissionField(row){
+        var html = `<tr>
+                        <td>
+                            <input type="text" name="permission[`+row+`][name]" id="permission_`+row+`_name" class="form-control" onkeyup="urlGenerator(this.value,'permission_`+row+`_slug')" placeholder="Enter Permission Name...">
+                        </td>
+                        <td>
+                            <input type="text" name="permission[`+row+`][slug]" id="permission_`+row+`_slug" class="form-control" placeholder="Enter Permission Slug...">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm remove_permission" data-toggle="tooptip" data-placement="top" data-original-title="Remove Permission Field"><i class="fas fa-minus-square"></i></button>
+                        </td>
+                    </tr>`;
+        $('#permission_table tbody').append(html);
+    }
+
+    $(document).on('click', '#add_permission', function () {
+        count++;
+        dynamicPermissionField(count);
+    });
+    $(document).on('click', '.remove_permission', function () {
+        count--;
+        $(this).closest('tr').remove();
+    });
+
 
 
     // ===================Data table filter===============
@@ -297,11 +426,20 @@
     });
     $(document).on('click', '#btn_reset', function () {
         $('#form_filter')[0].reset();
+        $('#form_filter .selectpicker').selectpicker('refresh');
         table.ajax.reload();
     });
 
 
-
     });
+
+    //============== Url Generator =====================
+
+    function urlGenerator(input_value, output_id){
+        var value = input_value.toLowerCase().trim();
+        var str = value.replace(/ +(?= )/g,'');
+        var name = str.split(' ').join('-');
+        $('#'+output_id).val(name);
+    }
 </script>
 @endpush

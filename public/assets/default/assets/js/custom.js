@@ -14,6 +14,7 @@ function showFormModal(modal_title,btn_text){
     $('.dropify-clear').trigger('click');
     $('#store_or_update_form .selectpicker').selectpicker('refresh');
     $('#store_or_update_modal').modal('show');
+    $('#store_or_update_modal table tbody').find("tr:gt(0)").remove();
 
     $('#store_or_update_modal .modal-title').html('<i class="fas fa-plus-square"></i> '+modal_title);
     $('#store_or_update_modal #save_btn').text(btn_text);

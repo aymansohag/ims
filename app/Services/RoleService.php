@@ -1,19 +1,16 @@
 <?php
 namespace App\Services;
 use App\Services\BaseService;
-use App\Repositories\MenuRepositories as Menu;
-use App\Repositories\ModuleRepositories as Module;
+use App\Repositories\RoleRepositories as Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class MenuService extends BaseService{
-    protected $menu;
-    protected $module;
+class RoleService extends BaseService{
+    protected $role;
 
-    public function __construct(Menu $menu, Module $module)
+    public function __construct(Role $role)
     {
-        $this->menu = $menu;
-        $this->module = $module;
+        $this->role = $role;
     }
 
     /**
@@ -26,31 +23,28 @@ class MenuService extends BaseService{
         if($request -> ajax()){
 
             // Filter datatable
-            if(!empty($request->menu_name)){
-                $this->menu-> setMenuName($request->menu_name);
+            if(!empty($request->role_name)){
+                $this->role-> setRoleName($request->role_name);
             }
 
             // Show uer list
-            $this->menu-> setOrderValue($request->input('order.0.column'));
-            $this->menu-> setDirValue($request->input('order.0.dir'));
-            $this->menu-> setLengthValue($request->input('length'));
-            $this->menu-> setStartValue($request->input('start'));
+            $this->role-> setOrderValue($request->input('order.0.column'));
+            $this->role-> setDirValue($request->input('order.0.dir'));
+            $this->role-> setLengthValue($request->input('length'));
+            $this->role-> setStartValue($request->input('start'));
 
-            $list = $this->menu-> getDataTableList();
+            $list = $this->role-> getDataTableList();
 
             $data = [];
             $no = $request->input('start');
             foreach ($list as $value) {
                 $no++;
                 $action = '';
-                $action .= ' <a style="cursor: pointer" class="dropdown-item" href="'.route('menu.builder', $value->id).'" ><i class="fas fa-th-list text-success"></i> Builder</a>';
-                $action .= ' <a style="cursor: pointer" class="dropdown-item edit_data" data-id="'.$value->id.'"><i class="fas fa-edit text-primary"></i> Edit</a>';
-                // $action .= ' <a style="cursor: pointer" class="dropdown-item view_data" data-id="'.$value->id.'"><i class="fas fa-eye text-warning"></i> View</a>';
+                $action .= ' <a style="cursor: pointer" class="dropdown-item edit_data" href=""><i class="fas fa-edit text-primary"></i> Edit</a>';
+                $action .= ' <a style="cursor: pointer" class="dropdown-item view_data" href=""><i class="fas fa-eye text-warning"></i> View</a>';
                 if($value->deletable == 1){
-                    $action .= ' <a style="cursor: pointer" class="dropdown-item delete_data" data-name="'.$value->menu_name.'" data-id="'.$value->id.'"><i class="fas fa-trash text-danger"></i> Delete</a>';
+                    $action .= ' <a style="cursor: pointer" class="dropdown-item delete_data" data-name="'.$value->role_name.'" data-id="'.$value->id.'"><i class="fas fa-trash text-danger"></i> Delete</a>';
                 }
-
-
                 $btngroup = '<div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-th-list"></i>

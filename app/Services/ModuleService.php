@@ -17,7 +17,7 @@ class ModuleService extends BaseService{
     }
 
 
-    public function index(int $id){
+    public function index(int $id){ 
         $data['menu'] = $this->menu->withMenuItems($id);
         return $data;
     }

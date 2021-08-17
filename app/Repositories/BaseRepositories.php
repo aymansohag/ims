@@ -29,6 +29,16 @@ class BaseRepositories{
     }
 
     /**
+     * insert function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    public function insert(array $attributes){
+        return $this->model->insert($attributes);
+    }
+
+    /**
      * update function
      *
      * @param array $attributes

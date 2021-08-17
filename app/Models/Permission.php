@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Permission extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    public function module(){
+        return $this->belongsTo(Module::class);
+    }
 }

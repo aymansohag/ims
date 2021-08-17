@@ -28,7 +28,7 @@ class ModuleController extends BaseController
         $this -> setPageData('Menu Builder', 'Menu Builder', 'fas fa-th-list');
         $data = $this->service->index($id);
         return view('module.index', compact('data'));
-    }
+    } 
 
     public function create($menu){
         $this -> setPageData('Add Menu Module', 'Create Menu Module', 'fas fa-th-list');

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\PermissionController;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -34,13 +35,25 @@ Route::middleware(['auth'])->group(function () {
         Route::post('order/{id}', [MenuController::class, 'orderItem']) -> name('order');
 
         // Module Route
-        Route::get('module/{id}', [ModuleController::class, 'index'])-> name('module');
+        Route::get('builder/{id}', [ModuleController::class, 'index'])-> name('builder');
 
         Route::group(['prefix' => 'module', 'as' => 'module.'], function () {
             Route::get('create/{menu}', [ModuleController::class, 'create'])-> name('create');
             Route::post('store-or-update', [ModuleController::class, 'storeOrUpdate'])-> name('store.or.update');
             Route::get('{menu}/edit/{module}', [ModuleController::class, 'edit'])-> name('edit');
             Route::delete('delete/{module}', [ModuleController::class, 'destroy'])-> name('delete');
+
+            // Module Permission
+
+            Route::get('permission', [PermissionController::class, 'index']) -> name('permission');
+            Route::group(['prefix' => 'permission', 'as' => 'permission.'], function(){
+                Route::post('datatable-data', [PermissionController::class, 'getDataTableData']) -> name('datatable.data');
+                Route::post('store', [PermissionController::class, 'store']) -> name('store');
+                Route::post('edit', [PermissionController::class, 'edit']) -> name('edit');
+                Route::post('update', [PermissionController::class, 'update']) -> name('update');
+                Route::post('delete', [PermissionController::class, 'delete']) -> name('delete');
+                Route::post('bulk-delete', [PermissionController::class, 'bulkDelete']) -> name('bulk.delete');
+            });
         });
     });
 });
