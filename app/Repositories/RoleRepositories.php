@@ -20,9 +20,9 @@ class RoleRepositories extends BaseRepositories{
     // datatable list query
     private function getDataTableQuery(){
         // column wise sorting
-        $this->column_order = [null,'id','role_name',null,null,null];
+        $this->column_order = [null,'id','role_name','deletable',null];
         // datatable list query
-        $query = $this->model;
+        $query = $this->model::toBase();
 
         // datatable data filter query
         if(!empty($this->role_name)){
@@ -55,6 +55,10 @@ class RoleRepositories extends BaseRepositories{
 
     public function countAll(){
         return $this->model::toBase()->get()->count();
+    }
+
+    public function findDataWithModulePermission(int $id){
+        return $this->model->with('module_role','permission_role')->find($id);
     }
 
 }

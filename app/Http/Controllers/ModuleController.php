@@ -28,7 +28,7 @@ class ModuleController extends BaseController
         $this -> setPageData('Menu Builder', 'Menu Builder', 'fas fa-th-list');
         $data = $this->service->index($id);
         return view('module.index', compact('data'));
-    } 
+    }
 
     public function create($menu){
         $this -> setPageData('Add Menu Module', 'Create Menu Module', 'fas fa-th-list');
@@ -44,7 +44,7 @@ class ModuleController extends BaseController
             }else{
                 session()->flash('success', 'Module created successfull');
             }
-            return redirect() -> route('menu.module', $request->menu_id);
+            return redirect() -> route('menu.builder', $request->menu_id);
         }else{
             if($request -> update_id){
                 session()->flash('error', 'Module can not update');

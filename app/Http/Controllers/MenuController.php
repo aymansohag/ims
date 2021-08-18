@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\MenuRequest;
+use App\Http\Requests\RoleRequest;
 use App\Services\MenuService;
 
 class MenuController extends BaseController
@@ -47,11 +48,11 @@ class MenuController extends BaseController
     /**
      * storeOrUpdate function
      *
-     * @param MenuRequest $request
+     * @param RoleRequest $request
      * @return void
      */
 
-    public function storeOrUpdate(MenuRequest $request){
+    public function storeOrUpdate(RoleRequest $request){
         if($request->ajax()){
             $result = $this->service->storeOrUpdate($request);
             if($result){

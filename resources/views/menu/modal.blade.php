@@ -32,7 +32,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm" style="padding: 9px 30px" id="save_btn"></button>
+                <button type="button" class="btn btn-primary btn-sm" id="save_btn"></button>
             </div>
         </form>
         <!-- /modal footer -->

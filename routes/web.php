@@ -3,6 +3,7 @@
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -48,12 +49,24 @@ Route::middleware(['auth'])->group(function () {
             Route::get('permission', [PermissionController::class, 'index']) -> name('permission');
             Route::group(['prefix' => 'permission', 'as' => 'permission.'], function(){
                 Route::post('datatable-data', [PermissionController::class, 'getDataTableData']) -> name('datatable.data');
-                Route::post('store', [PermissionController::class, 'store']) -> name('store');
+                Route::post('sote-or-update', [PermissionController::class, 'storeOrUpdate']) -> name('store.or.update');
                 Route::post('edit', [PermissionController::class, 'edit']) -> name('edit');
-                Route::post('update', [PermissionController::class, 'update']) -> name('update');
                 Route::post('delete', [PermissionController::class, 'delete']) -> name('delete');
                 Route::post('bulk-delete', [PermissionController::class, 'bulkDelete']) -> name('bulk.delete');
             });
         });
+    });
+
+    // Role Permission
+
+    Route::get('role', [RoleController::class, 'index']) -> name('role');
+    Route::group(['prefix' => 'role', 'as' => 'role.'], function(){
+        Route::get('create', [RoleController::class, 'create']) -> name('create');
+        Route::post('datatable-data', [RoleController::class, 'getDataTableData']) -> name('datatable.data');
+        Route::post('store-or-update', [RoleController::class, 'storeOrUpdate']) -> name('store.or.update');
+        Route::get('edit/{id}', [RoleController::class, 'edit']) -> name('edit');
+        Route::get('view/{id}', [RoleController::class, 'show']) -> name('view');
+        Route::post('delete', [RoleController::class, 'delete']) -> name('delete');
+        Route::post('bulk-delete', [RoleController::class, 'bulkDelete']) -> name('bulk.delete');
     });
 });

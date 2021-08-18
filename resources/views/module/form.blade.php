@@ -42,7 +42,7 @@
                 </div>
                 <!-- /entry heading -->
 
-                <a href="{{ route('menu.module', $data['menu']->id) }}" class="btn btn-danger btn-sm">
+                <a href="{{ route('menu.builder', $data['menu']->id) }}" class="btn btn-danger btn-sm">
                     <i class="fas fa-arrow-circle-left"></i>
                     Back
                 </a>

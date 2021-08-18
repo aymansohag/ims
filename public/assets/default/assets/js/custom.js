@@ -117,6 +117,9 @@ function deleteData(id,url,table,row,name){
                         $('.delete_btn').addClass('d-none');
                     });
                 }
+                if(response.status == 'error'){
+                    swal.fire('Ooops...',response.message, response.status);
+                }
             }).fail(function(){
                 swal.fire('Ooops...',"Something went wrong!", "error");
             });
