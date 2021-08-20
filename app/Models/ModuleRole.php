@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ModuleRole extends Model
 {
     use HasFactory;
+
+    protected $table = 'module_role';
+
+    protected $guarded = [];
 }

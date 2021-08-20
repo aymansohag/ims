@@ -1,5 +1,8 @@
 <?php
 namespace App\Services;
+
+use App\Models\ModuleRole;
+use App\Models\PermissionRole;
 use App\Services\BaseService;
 use App\Repositories\RoleRepositories as Role;
 use App\Repositories\ModuleRepositories as Module;
@@ -133,8 +136,26 @@ class RoleService extends BaseService{
 
     public function bulkDelete(Request $request){
         if(!empty($request->ids)){
-            foreach ($variable as $key => $value) {
-
+            $delete_list = [];
+            $undelete_list = [];
+            foreach ($request->ids as $id) {
+                $role = $this->role->find($id);
+                if($role->users->count() > 0){
+                    array_push($undelete_list, $role->role_name);
+                }else{
+                    array_push($delete_list, $role->id);
+                }
+            }
+            if(!empty($delete_list)){
+                $delete_module_role = ModuleRole::whereIn('role_id',$delete_list)->delete();
+                $delete_permission_role = PermissionRole::whereIn('role_id',$delete_list)->delete();
+                $message = !empty($undelete_list) ? "These Roles() can't delete becouse they are related to manu users" : ;
+                if($delete_module_role && $delete_permission_role){
+                    $this->role->destroy($delete_list);
+                    $response = ['status' => 1, 'message' => ''];
+                }else{
+                    $response = 3;
+                }
             }
         }
     }
