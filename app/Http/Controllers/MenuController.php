@@ -46,13 +46,13 @@ class MenuController extends BaseController
     }
 
     /**
-     * storeOrUpdate function
+     * storeOrUppdate function
      *
-     * @param RoleRequest $request
+     * @param  $request
      * @return void
      */
 
-    public function storeOrUpdate(RoleRequest $request){
+    public function storeOrUpdate(MenuRequest $request){
         if($request->ajax()){
             $result = $this->service->storeOrUpdate($request);
             if($result){
@@ -64,7 +64,6 @@ class MenuController extends BaseController
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
         }
     }
-
     /**
      * Edit function
      *

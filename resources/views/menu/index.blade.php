@@ -98,7 +98,7 @@
 @endsection
 @push('script')
 <script>
-    var table;
+    var table; 
 
     $(document).ready(function ($) {
     // ================Data Table show setup=============
@@ -210,7 +210,7 @@
             ],
         });
 
-
+ 
     // ============== form submit btn click================
     $(document).on('click', '#save_btn', function(){
         var form = document.getElementById('store_or_update_form');

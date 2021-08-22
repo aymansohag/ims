@@ -126,16 +126,16 @@ class RoleController extends BaseController
         }
     }
 
-    public function bulkDelete(Request $request){
-        if($request->ajax()){
-            $result = $this->service->bulkDelete($request);
-            if($result){
-                return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
-            }else{
-                return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
-            }
-        }else{
-            return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
-        }
-    }
+    // public function bulkDelete(Request $request){
+    //     if($request->ajax()){
+    //         $result = $this->service->bulkDelete($request);
+    //         if($result){
+    //             return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+    //         }else{
+    //             return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+    //         }
+    //     }else{
+    //         return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
+    //     }
+    // }
 }

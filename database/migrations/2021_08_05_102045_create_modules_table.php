@@ -22,7 +22,7 @@ class CreateModulesTable extends Migration
             $table->string('divider_name') -> nullable();
             $table->string('icon_class') -> nullable();
             $table->string('url') -> nullable();
-            $table->integer('order') -> nullable();
+            $table->integer('order') -> nullable(); 
             $table->unsignedInteger('parent_id') -> nullable();
             $table->enum('target', ['_self', '_blank']) -> default('_self');
             $table->timestamps();

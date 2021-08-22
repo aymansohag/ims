@@ -11,8 +11,6 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .scripts('resources/js/perfect-scrollbar.min.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css')
-    .copyDirectory('resources/asset/css/gaxon-icon/fonts','public/css/fonts')
-    .copyDirectory('resources/asset/fonts/noir-pro','public/fonts/noir-pro');
+ mix.js('resources/js/app.js', 'public/js')
+ .vue()
+ .sass('resources/sass/app.scss', 'public/css');
