@@ -155,6 +155,9 @@ function bulkDelete(ids,url,table,rows){
                         $('.delete_btn').addClass('d-none');
                     });
                 }
+                if(response.status == 'error'){
+                    swal.fire('Oppos',response.message,"error");
+                }
             }).fail(function(){
                 swal.fire('Ooops...',"Something went wrong!", "error");
             });

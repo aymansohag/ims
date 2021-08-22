@@ -64,7 +64,7 @@
                                             @else
                                             <i class="fas fa-times-circle text-danger"></i>
                                             @endif
-                                            {{ $menu->type == 1 ? $menu->divider_name : $menu->module_name }}
+                                            {!! $menu->type == 1 ? $menu->divider_name." <small>(Divider)</small>" : $menu->module_name !!}
                                             @if (!$menu->permission -> isEmpty())
                                                 <ul class="" style="list-style: none">
                                                     @foreach ($menu->permission as $permission)
@@ -87,7 +87,7 @@
                                              @else
                                              <i class="fas fa-times-circle text-danger"></i>
                                              @endif
-                                            {{ $menu->type == 1 ? $menu->divider_name : $menu->module_name }}
+                                             {!! $menu->type == 1 ? $menu->divider_name." <small>(Divider)</small>" : $menu->module_name !!}
                                             <ul class="" style="list-style: none">
                                                 @foreach ($menu -> submenu as $submenu)
                                                     <li>

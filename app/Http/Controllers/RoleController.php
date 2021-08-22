@@ -114,9 +114,9 @@ class RoleController extends BaseController
     public function delete(Request $request){
         if($request->ajax()){
             $result = $this->service->delete($request);
-            if($result == 2){
+            if($result == 1){
                 return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
-            }elseif($result == 1){
+            }elseif($result == 2){
                 return $this->responseJson($status='error',$message="Data can not delet becouse it's releted with many users",$data=null,$response_code=200);
             }else{
                 return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
@@ -126,16 +126,18 @@ class RoleController extends BaseController
         }
     }
 
-    // public function bulkDelete(Request $request){
-    //     if($request->ajax()){
-    //         $result = $this->service->bulkDelete($request);
-    //         if($result){
-    //             return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
-    //         }else{
-    //             return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
-    //         }
-    //     }else{
-    //         return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
-    //     }
-    // }
+    public function bulkDelete(Request $request){
+        if($request->ajax()){
+            $result = $this->service->bulkDelete($request);
+            if($result['status'] == 1){
+                return $this->responseJson($status='success',$message = !empty($result['message']) ? $result['message'] : "Data has been deleted successfull",$data=null,$response_code=200);
+            }elseif($result == 2){
+                return $this->responseJson($status='error', $message = !empty($result['message']) ? $result['message'] : "Selected data can not delete" , $data=null,$response_code=200);
+            }else{
+                return $this->responseJson($status='error',$message= !empty($result['message']) ? $result['message'] : 'Selected data can not delete',$data=null,$response_code=204);
+            }
+        }else{
+            return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
+        }
+    }
 }

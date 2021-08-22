@@ -25,6 +25,7 @@ Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    
     // Menu Routes
     Route::get('menu', [MenuController::class, 'index']) -> name('menu');
     Route::group(['prefix' => 'menu', 'as' => 'menu.'], function(){
@@ -49,8 +50,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('permission', [PermissionController::class, 'index']) -> name('permission');
             Route::group(['prefix' => 'permission', 'as' => 'permission.'], function(){
                 Route::post('datatable-data', [PermissionController::class, 'getDataTableData']) -> name('datatable.data');
-                Route::post('sote-or-update', [PermissionController::class, 'storeOrUpdate']) -> name('store.or.update');
+                Route::post('store', [PermissionController::class, 'store']) -> name('store');
                 Route::post('edit', [PermissionController::class, 'edit']) -> name('edit');
+                Route::post('update', [PermissionController::class, 'update']) -> name('update');
                 Route::post('delete', [PermissionController::class, 'delete']) -> name('delete');
                 Route::post('bulk-delete', [PermissionController::class, 'bulkDelete']) -> name('bulk.delete');
             });
@@ -69,4 +71,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('delete', [RoleController::class, 'delete']) -> name('delete');
         Route::post('bulk-delete', [RoleController::class, 'bulkDelete']) -> name('bulk.delete');
     });
+
+    // User Routes
+    Route::get('user', [UserController::class, 'index']) -> name('user');
+    Route::group(['prefix' => 'user', 'as' => 'user.'], function(){
+        Route::post('datatable-data', [UserController::class, 'getDataTableData']) -> name('datatable.data');
+        Route::post('store-or-update', [UserController::class, 'storeOrUpdate']) -> name('store.or.update');
+        Route::post('edit', [UserController::class, 'edit']) -> name('edit');
+        Route::post('delete', [UserController::class, 'delete']) -> name('delete');
+        Route::post('bulk-delete', [UserController::class, 'bulkDelete']) -> name('bulk.delete');
+    });
+
 });

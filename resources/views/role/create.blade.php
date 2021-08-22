@@ -54,7 +54,7 @@
                                             @if ($menu -> submenu -> isEmpty())
                                                 <li>
                                                     <input type="checkbox" name="module[]" class="module" value="{{ $menu->id }}">
-                                                    {{ $menu->type == 1 ? $menu->divider_name : $menu->module_name }}
+                                                    {!! $menu->type == 1 ? $menu->divider_name." <small>(Divider)</small>" : $menu->module_name !!}
                                                     @if (!$menu->permission -> isEmpty())
                                                         <ul>
                                                             @foreach ($menu->permission as $permission)
@@ -68,7 +68,7 @@
                                             @else
                                                <li>
                                                     <input type="checkbox" name="module[]" class="module" value="{{ $menu->id }}">
-                                                    {{ $menu->type == 1 ? $menu->divider_name : $menu->module_name }}
+                                                    {!! $menu->type == 1 ? $menu->divider_name." <small>(Divider)</small>" : $menu->module_name !!}
                                                     <ul>
                                                         @foreach ($menu -> submenu as $submenu)
                                                             <li>
