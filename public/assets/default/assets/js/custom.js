@@ -4,7 +4,7 @@ $('.dropify').dropify();
 $('.selectpicker').selectpicker({
     dropupAuto: false
 });
-// =================== Menu Modal Show ==================
+// =================== Modal Show ==================
 
 function showFormModal(modal_title,btn_text){
     $('#store_or_update_form')[0].reset();

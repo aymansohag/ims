@@ -4,6 +4,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -78,8 +79,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('datatable-data', [UserController::class, 'getDataTableData']) -> name('datatable.data');
         Route::post('store-or-update', [UserController::class, 'storeOrUpdate']) -> name('store.or.update');
         Route::post('edit', [UserController::class, 'edit']) -> name('edit');
+        Route::post('show', [UserController::class, 'show']) -> name('show');
         Route::post('delete', [UserController::class, 'delete']) -> name('delete');
         Route::post('bulk-delete', [UserController::class, 'bulkDelete']) -> name('bulk.delete');
+        Route::post('change-status', [UserController::class, 'changeStatus']) -> name('change.status');
     });
 
 });

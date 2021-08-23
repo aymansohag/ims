@@ -26,6 +26,8 @@ class User extends Authenticatable
         'mobile',
         'gender',
         'status',
+        'created_by',
+        'modified_by',
     ];
 
     /**
@@ -49,5 +51,9 @@ class User extends Authenticatable
 
     public function setPasswordAttribute($value){
         $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function role(){
+        return $this->belongsTo(Role::class);
     }
 }

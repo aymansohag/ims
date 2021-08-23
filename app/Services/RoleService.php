@@ -19,6 +19,10 @@ class RoleService extends BaseService{
         $this->module = $module;
     }
 
+    public function index(){
+        return $this->role->all();
+    }
+
     /**
      * getDatatableData function
      *
