@@ -37,7 +37,11 @@ class UserRepositories extends BaseRepositories{
     // user list query
     private function getDataTableQuery(){
         // column wise sorting
-        $this->column_order = [null,'id','id','name','role_id','email','mobile','status','gender',null];
+        if(permission('user-balk-delete')){
+            $this->column_order = [null,'id','id','name','role_id','email','mobile','status','gender',null];
+        }else{
+            $this->column_order = ['id','id','name','role_id','email','mobile','status','gender',null];
+        }
         // user list query
         $query = $this->model->with('role:id,role_name');
 

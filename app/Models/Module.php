@@ -33,4 +33,8 @@ class Module extends Model
     public function permission(){
         return $this->hasMany(Permission::class);
     }
+
+    public function module_role(){
+        return $this->hasMany(ModuleRole::class);
+    }
 }

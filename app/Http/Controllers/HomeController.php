@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\BaseController;
 
-class HomeController extends Controller
+class HomeController extends BaseController
 {
     /**
      * Create a new controller instance.
@@ -24,6 +25,12 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    public function unauthorized()
+    {
+        $this -> setPageData('Unauthorized', 'Unauthorized', 'fas fa-ban');
+        return view('unauthorized');
     }
 
 }

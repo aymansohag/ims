@@ -26,8 +26,12 @@ class MenuController extends BaseController
      * @return void
      */
     public function index(){
-        $this -> setPageData('Menu', 'Menu', 'fas fa-th-list');
-        return view('menu.index');
+        if(permission('menu-access')){
+            $this -> setPageData('Menu', 'Menu', 'fas fa-th-list');
+            return view('menu.index');
+        }else{
+            return $this->unauthorizedAccessBlocked();
+        }
     }
 
     /**
@@ -37,12 +41,14 @@ class MenuController extends BaseController
      * @return void
      */
     public function getDataTableData(Request $request){
-        if($request -> ajax()){
-            $output = $this->service->getDataTableData($request);
-        }else{
-            $output = ['status'=>'error','message'=>'Unauthorize access blocked'];
-        }
-        return response()->json($output);
+       if(permission('menu-access')){
+            if($request -> ajax()){
+                $output = $this->service->getDataTableData($request);
+            }else{
+                $output = ['status'=>'error','message'=>'Unauthorize access blocked'];
+            }
+            return response()->json($output);
+       }
     }
 
     /**
@@ -54,11 +60,15 @@ class MenuController extends BaseController
 
     public function storeOrUpdate(MenuRequest $request){
         if($request->ajax()){
-            $result = $this->service->storeOrUpdate($request);
-            if($result){
-                return $this->responseJson($status='success',$message='Data has been saved successfull',$data=null,$response_code=204);
+            if(permission('menu-add') || permission('menu-edit')){
+                $result = $this->service->storeOrUpdate($request);
+                if($result){
+                    return $this->responseJson($status='success',$message='Data has been saved successfull',$data=null,$response_code=204);
+                }else{
+                    return $this->responseJson($status='error',$message='Data can not save',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='Data can not save',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
@@ -72,11 +82,15 @@ class MenuController extends BaseController
      */
     public function edit(Request $request){
         if($request->ajax()){
-            $data = $this->service->edit($request);
-            if($data -> count()){
-                return $this -> responseJson($status='success',$message=null,$data=$data,$response_code=201);
+            if(permission('menu-add')){
+                $data = $this->service->edit($request);
+                if($data -> count()){
+                    return $this -> responseJson($status='success',$message=null,$data=$data,$response_code=201);
+                }else{
+                    return $this->responseJson($status='error',$message='No Data Found',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='No Data Found',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
@@ -91,11 +105,15 @@ class MenuController extends BaseController
      */
     public function delete(Request $request){
         if($request->ajax()){
-            $result = $this->service->delete($request);
-            if($result){
-                return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+            if(permission('menu-delete')){
+                $result = $this->service->delete($request);
+                if($result){
+                    return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+                }else{
+                    return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
@@ -104,11 +122,15 @@ class MenuController extends BaseController
 
     public function bulkDelete(Request $request){
         if($request->ajax()){
-            $result = $this->service->bulkDelete($request);
-            if($result){
-                return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+            if(permission('menu-bulk-delete')){
+                $result = $this->service->bulkDelete($request);
+                if($result){
+                    return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+                }else{
+                    return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);

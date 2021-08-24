@@ -5,6 +5,7 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,8 @@ Auth::routes(['register' => false]);
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('unauthorized', [HomeController::class, 'unauthorized'])->name('unauthorized');
     
     // Menu Routes
     Route::get('menu', [MenuController::class, 'index']) -> name('menu');

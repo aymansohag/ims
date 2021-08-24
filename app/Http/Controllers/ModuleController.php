@@ -25,50 +25,71 @@ class ModuleController extends BaseController
      * @return void
      */
     public function index($id){
-        $this -> setPageData('Menu Builder', 'Menu Builder', 'fas fa-th-list');
-        $data = $this->service->index($id);
-        return view('module.index', compact('data'));
+        if(permission('menu-builder')){
+            $this -> setPageData('Menu Builder', 'Menu Builder', 'fas fa-th-list');
+            $data = $this->service->index($id);
+            return view('module.index', compact('data'));
+        }else{
+            return $this->unauthorizedAccessBlocked();
+        }
     }
 
     public function create($menu){
-        $this -> setPageData('Add Menu Module', 'Create Menu Module', 'fas fa-th-list');
-        $data = $this->service->index($menu);
-        return view('module.form', compact('data'));
+        if(permission('menu-module-add')){
+            $this -> setPageData('Add Menu Module', 'Create Menu Module', 'fas fa-th-list');
+            $data = $this->service->index($menu);
+            return view('module.form', compact('data'));
+        }else{
+            return $this->unauthorizedAccessBlocked();
+        }
     }
 
     public function storeOrUpdate(ModuleRequest $request){
-        $result = $this->service->storeOrUpdate($request);
-        if($result){
-            if($request -> update_id){
-                session()->flash('success', 'Module updated successfull');
+        if(permission('menu-module-add') || permission('menu-module-edit')){
+            $result = $this->service->storeOrUpdate($request);
+            if($result){
+                if($request -> update_id){
+                    session()->flash('success', 'Module updated successfull');
+                }else{
+                    session()->flash('success', 'Module created successfull');
+                }
+                return redirect() -> route('menu.builder', $request->menu_id);
             }else{
-                session()->flash('success', 'Module created successfull');
+                if($request -> update_id){
+                    session()->flash('error', 'Module can not update');
+                }else{
+                    session()->flash('error', 'Module can not create');
+                }
+                return back();
             }
-            return redirect() -> route('menu.builder', $request->menu_id);
         }else{
-            if($request -> update_id){
-                session()->flash('error', 'Module can not update');
-            }else{
-                session()->flash('error', 'Module can not create');
-            }
-            return back();
+            return $this->unauthorizedAccessBlocked();
         }
     }
 
     public function edit($menu_id, $module_id){
-        $this -> setPageData('Update Menu Module', 'Update Menu Module', 'fas fa-th-list');
-        $data = $this->service->edit($menu_id, $module_id);
-        return view('module.form', compact('data'));
+        if(permission('menu-module-edit')){
+            $this -> setPageData('Update Menu Module', 'Update Menu Module', 'fas fa-th-list');
+            $data = $this->service->edit($menu_id, $module_id);
+            return view('module.form', compact('data'));
+        }else{
+            return $this->unauthorizedAccessBlocked();
+        }
+        
     }
 
     public function destroy($module){
-        $result = $this->service->delete($module);
-        if($result){
-            session()->flash('success', 'Module deleted successfull');
+        if(permission('menu-module-delete')){
+            $result = $this->service->delete($module);
+            if($result){
+                session()->flash('success', 'Module deleted successfull');
+            }else{
+                session()->flash('error', 'Module can not delete');
+            }
+            return redirect() -> back();
         }else{
-            session()->flash('error', 'Module can not delete');
+            return $this->unauthorizedAccessBlocked();
         }
-        return redirect() -> back();
     }
 
 }

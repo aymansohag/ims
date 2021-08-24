@@ -52,9 +52,15 @@ class UserService extends BaseService{
             foreach ($list as $value) {
                 $no++;
                 $action = '';
-                $action .= ' <a style="cursor: pointer" class="dropdown-item edit_data" data-id="'.$value->id.'"><i class="fas fa-edit text-primary"></i> Edit</a>';
-                $action .= ' <a style="cursor: pointer" class="dropdown-item view_data" data-id="'.$value->id.'"><i class="fas fa-eye text-warning"></i> View</a>';
-                $action .= ' <a style="cursor: pointer" class="dropdown-item delete_data" data-name="'.$value->name.'" data-id="'.$value->id.'"><i class="fas fa-trash text-danger"></i> Delete</a>';
+                if(permission('user-edit')){
+                    $action .= ' <a style="cursor: pointer" class="dropdown-item edit_data" data-id="'. $value->id.'"><i class="fas fa-edit text-primary"></i> Edit</a>';
+                }
+                if(permission('user-show')){
+                    $action .= ' <a style="cursor: pointer" class="dropdown-item view_data" data-id="'.$value->id.'"><i class="fas fa-eye text-warning"></i> View</a>';
+                }
+                if(permission('user-delete')){
+                    $action .= ' <a style="cursor: pointer" class="dropdown-item delete_data" data-name="'.$value->name.'" data-id="'.$value->id.'"><i class="fas fa-trash text-danger"></i> Delete</a>';
+                }
 
                 $btngroup = '<div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -66,12 +72,13 @@ class UserService extends BaseService{
                             </div>';
 
                 $row = [];
-
+                if(permission('user-bulk-delete')){
                 $row []    = '<div class="custom-control custom-checkbox">
                                 <input value="'.$value->id.'" name="did[]" class="custom-control-input select_data" onchange="selectSingleItem('.$value->id.')" type="checkbox" value="" id="checkBox'.$value->id.'">
                                 <label class="custom-control-label" for="checkBox'.$value->id.'">
                                 </label>
                             </div>';
+                }
                 $row []    = $no;
                 $row []    = $this->avatar($value);
                 $row []    = $value->name;

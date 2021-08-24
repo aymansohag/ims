@@ -28,9 +28,13 @@ class UserController extends BaseController
      * @return void
      */
     public function index(){
-        $this -> setPageData('User', 'User', 'fas fa-users');
-        $roles = $this->role->index();
-        return view('user.index', compact('roles'));
+        if(permission('user-access')){
+            $this -> setPageData('User', 'User', 'fas fa-users');
+            $roles = $this->role->index();
+            return view('user.index', compact('roles'));
+        }else{
+            return $this->unauthorizedAccessBlocked();
+        }
     }
 
     /**
@@ -40,12 +44,14 @@ class UserController extends BaseController
      * @return void
      */
     public function getDataTableData(Request $request){
-        if($request -> ajax()){
-            $output = $this->service->getDataTableData($request);
-        }else{
-            $output = ['status'=>'error','message'=>'Unauthorize access blocked'];
+        if(permission('user-access')){
+            if($request -> ajax()){
+                $output = $this->service->getDataTableData($request);
+            }else{
+                $output = ['status'=>'error','message'=>'Unauthorize access blocked'];
+            }
+            return response()->json($output);
         }
-        return response()->json($output);
     }
 
     /**
@@ -57,11 +63,15 @@ class UserController extends BaseController
 
     public function storeOrUpdate(UserRequest $request){
         if($request->ajax()){
-            $result = $this->service->storeOrUpdate($request);
-            if($result){
-                return $this->responseJson($status='success',$message='Data has been saved successfull',$data=null,$response_code=204);
+            if(permission('user-add') || permission('user-edit')){
+                $result = $this->service->storeOrUpdate($request);
+                if($result){
+                    return $this->responseJson($status='success',$message='Data has been saved successfull',$data=null,$response_code=204);
+                }else{
+                    return $this->responseJson($status='error',$message='Data can not save',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='Data can not save',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
@@ -75,11 +85,15 @@ class UserController extends BaseController
      */
     public function edit(Request $request){
         if($request->ajax()){
-            $data = $this->service->edit($request);
-            if($data -> count()){
-                return $this -> responseJson($status='success',$message=null,$data=$data,$response_code=201); 
+            if(permission('user-edit')){
+                $data = $this->service->edit($request);
+                if($data -> count()){
+                    return $this -> responseJson($status='success',$message=null,$data=$data,$response_code=201); 
+                }else{
+                    return $this->responseJson($status='error',$message='No Data Found',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='No Data Found',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
@@ -91,8 +105,10 @@ class UserController extends BaseController
      */
     public function show(Request $request){
         if($request->ajax()){
-            $user = $this->service->edit($request);
-            return view('user.details', compact('user')) -> render();
+            if(permission('user-show')){
+                $user = $this->service->edit($request);
+                return view('user.details', compact('user')) -> render();
+            }
         } 
     }
 
@@ -104,11 +120,15 @@ class UserController extends BaseController
      */
     public function delete(Request $request){
         if($request->ajax()){
-            $result = $this->service->delete($request);
-            if($result){
-                return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+            if(permission('user-delete')){
+                $result = $this->service->delete($request);
+                if($result){
+                    return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+                }else{
+                    return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);
@@ -121,11 +141,15 @@ class UserController extends BaseController
 
     public function bulkDelete(Request $request){
         if($request->ajax()){
-            $result = $this->service->bulkDelete($request);
-            if($result){
-                return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+            if(permission('user-bulk-delete')){
+                $result = $this->service->bulkDelete($request);
+                if($result){
+                    return $this->responseJson($status='success',$message="Data has been deleted successfull",$data=null,$response_code=200);
+                }else{
+                    return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                }
             }else{
-                return $this->responseJson($status='error',$message='Data can not delete',$data=null,$response_code=204);
+                return $this->responseJson($status='error',$message='Unauthorized access blocked',$data=null,$response_code=401);
             }
         }else{
             return $this->responseJson($status='error',$message=null,$data=null,$response_code=401);

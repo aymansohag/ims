@@ -35,10 +35,12 @@
                         <i class="fas fa-arrow-circle-left"></i>
                         Back To Menu List
                     </a>
-                    <a href="{{ route('menu.module.create', $data['menu']->id) }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus-square"></i>
-                        Add New
-                    </a>
+                    @if (permission('menu-module-add'))
+                        <a href="{{ route('menu.module.create', $data['menu']->id) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus-square"></i>
+                            Add New
+                        </a>
+                    @endif
                 </div>
 
             </div>

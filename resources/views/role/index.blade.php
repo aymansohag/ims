@@ -29,11 +29,12 @@
                     <h3 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h3>
                 </div>
                 <!-- /entry heading -->
-
-                <a href="{{ route('role.create') }}" class="btn btn-primary btn-sm" >
-                    <i class="fas fa-plus-square"></i>
-                    Add New
-                </a>
+                @if (permission('role-add'))
+                    <a href="{{ route('role.create') }}" class="btn btn-primary btn-sm" >
+                        <i class="fas fa-plus-square"></i>
+                        Add New
+                    </a>
+                @endif
 
             </div>
             <!-- /entry header -->
@@ -60,13 +61,15 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                <th>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="select_all"
-                                            onchange="selectAll()">
-                                        <label class="custom-control-label" for="select_all"></label>
-                                    </div>
-                                </th>
+                                @if (permission('role-bulk-delete'))
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="select_all"
+                                                onchange="selectAll()">
+                                            <label class="custom-control-label" for="select_all"></label>
+                                        </div>
+                                    </th>
+                                @endif
                                 <th>Sl</th>
                                 <th>Role Name</th>
                                 <th>Deletable</th>
@@ -128,12 +131,21 @@
                 }
             },
             "columnDefs": [{
+                @if (permission('role-bulk-delete'))
                     "targets": [0, 4],
+                @else
+                    "targets": [3],
+                @endif
                     "orderable": false,
                     "className": "text-center"
                 },
                 {
+                @if (permission('role-bulk-delete'))
                     "targets": [1, 3],
+                @else
+                    "targets": [1, 3],
+                @endif
+                    "targets": [0, 2],
                     "className": "text-center"
                 },
             ],
@@ -142,6 +154,7 @@
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
             "buttons": [
+                @if (permission('role-report'))
                 {
                     'extend': 'colvis',
                     'className': 'btn btn-secondary btn-sm text-white',
@@ -199,6 +212,8 @@
                         columns: [1, 2, 3]
                     },
                 },
+                @endif
+                @if (permission('role-bulk-delete'))
                 {
                     "className": "btn btn-danger btn-sm delete_btn d-none text-white",
                     "text": "Delete",
@@ -206,6 +221,7 @@
                         multiDelete();
                     }
                 }
+                @endif
             ],
         });
 

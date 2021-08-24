@@ -20,7 +20,12 @@ class MenuRepositories extends BaseRepositories{
     // user list query
     private function getDataTableQuery(){
         // column wise sorting
-        $this->column_order = [null,'id','menu_name','deletable',null];
+        if(permission('menu-bulk-delete')){
+          $this->column_order = [null,'id','menu_name','deletable',null];
+        }else{
+            $this->column_order = ['id','menu_name','deletable',null];
+        }
+        
         // user list query
         $query = $this->model::toBase();
 

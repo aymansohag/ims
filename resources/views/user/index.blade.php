@@ -27,11 +27,12 @@
                     <h3 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h3>
                 </div>
                 <!-- /entry heading -->
-
-                <button class="btn btn-primary btn-sm" onclick="showUserFormModal('Add New User', 'Save')">
-                    <i class="fas fa-plus-square"></i>
-                    Add New
-                </button>
+                @if (permission('user-add'))
+                    <button class="btn btn-primary btn-sm" onclick="showUserFormModal('Add New User', 'Save')">
+                        <i class="fas fa-plus-square"></i>
+                        Add New
+                    </button>
+                @endif
 
             </div>
             <!-- /entry header -->
@@ -67,13 +68,16 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                <th>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="select_all"
-                                            onchange="selectAll()">
-                                        <label class="custom-control-label" for="select_all"></label>
-                                    </div>
-                                </th>
+                                @if (permission('user-bulk-delete'))
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="select_all"
+                                                onchange="selectAll()">
+                                            <label class="custom-control-label" for="select_all"></label>
+                                        </div>
+                                    </th>
+                                @endif
+
                                 <th>Sl</th>
                                 <th>Avatar</th>
                                 <th>Name</th>
@@ -146,12 +150,20 @@
                     }
                 },
                 "columnDefs": [{
+                    @if (permission('user-bulk-delete'))
                         "targets": [0, 9],
+                    @else
+                        "targets": [8],
+                    @endif
                         "orderable": false,
                         "className": "text-center"
                     },
                     {
+                    @if (permission('user-bulk-delete'))
                         "targets": [1,2,4,6,7,8],
+                    @else
+                        "targets": [0,1,3,5,6,7],
+                    @endif
                         "className": "text-center"
                     },
                 ],
@@ -160,6 +172,7 @@
                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
                 "buttons": [
+                    @if (permission('user-report'))
                     {
                         'extend': 'colvis',
                         'className': 'btn btn-secondary btn-sm text-white',
@@ -219,6 +232,8 @@
                             }
                         },
                     },
+                    @endif
+                    @if (permission('user-bulk-delete'))
                     {
                         "className": "btn btn-danger btn-sm delete_btn d-none text-white",
                         "text": "Delete",
@@ -226,6 +241,7 @@
                             multiDelete();
                         }
                     }
+                    @endif
                 ],
             });
 

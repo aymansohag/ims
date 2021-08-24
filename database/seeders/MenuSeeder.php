@@ -16,7 +16,7 @@ class MenuSeeder extends Seeder
     {
         Menu::insert([
             'menu_name' => 'Backend Menu',
-            'deletable' => 0,
+            'deletable' => 1,
         ]);
     }
 }

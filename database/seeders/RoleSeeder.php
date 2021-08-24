@@ -17,11 +17,11 @@ class RoleSeeder extends Seeder
         Role::insert([
             [
                 'role_name' => 'Super Admin',
-                'deletable' => false,
+                'deletable' => 1,
             ],
             [
                 'role_name' => 'Admin',
-                'deletable' => false,
+                'deletable' => 1,
             ],
         ]);
     }

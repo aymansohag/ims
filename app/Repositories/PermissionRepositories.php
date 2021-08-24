@@ -24,7 +24,11 @@ class PermissionRepositories extends BaseRepositories{
     // datatable list query
     private function getDataTableQuery(){
         // column wise sorting
-        $this->column_order = [null,'id','module_id','name','slug',null];
+        if(permission('permission-bulk-delete')){
+            $this->column_order = [null,'id','module_id','name','slug',null];
+        }else{
+            $this->column_order = ['id','module_id','name','slug',null];
+        }
         // datatable list query
         $query = $this->model->with('module:id,module_name');
 

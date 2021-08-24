@@ -9,7 +9,7 @@ class ModuleRole extends Model
 {
     use HasFactory;
 
-    protected $table = 'module_role';
+    protected $table = 'module_role'; 
 
     protected $guarded = [];
 }

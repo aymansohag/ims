@@ -20,7 +20,11 @@ class RoleRepositories extends BaseRepositories{
     // datatable list query
     private function getDataTableQuery(){
         // column wise sorting
-        $this->column_order = [null,'id','role_name','deletable',null];
+        if (permission('role-bulk-delete')){
+            $this->column_order = [null,'id','role_name','deletable',null];
+        }else{
+            $this->column_order = ['id','role_name','deletable',null];
+        }
         // datatable list query
         $query = $this->model::toBase();
 
