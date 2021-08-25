@@ -61,32 +61,16 @@ class RoleService extends BaseService{
                         $action .= ' <a style="cursor: pointer" class="dropdown-item delete_data" data-name="'.$value->role_name.'" data-id="'.$value->id.'"><i class="fas fa-trash text-danger"></i> Delete</a>';
                     }
                 }
-                $btngroup = '<div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-th-list"></i>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    '.$action.'
-                                </div>
-                            </div>';
 
                 $row = [];
                 if (permission('role-bulk-delete')){
-                    if($value->deletable == 2){
-                        $row []    = ' <div class="custom-control custom-checkbox">
-                                        <input value="'.$value->id.'" name="did[]" class="custom-control-input select_data" onchange="selectSingleItem('.$value->id.')" type="checkbox" value="" id="checkBox'.$value->id.'">
-                                        <label class="custom-control-label" for="checkBox'.$value->id.'">
-                                        </label>
-                                    </div>';
-                    }else{
-                        $row [] = '';
-                    }
+                    $row [] = ($value->deletable == 2) ? tableCheckBox($value->id) : '';
                 }
 
                 $row []    = $no;
                 $row []    = $value->role_name;
                 $row []    = DELETABLE[$value->deletable];
-                $row []    = $btngroup;
+                $row []    = actionButton($action);
                 $data[]    = $row;
             }
             return $this->datatableDraw($request->input('draw'), $this->role-> countFilter(), $this->role-> countAll(), $data);

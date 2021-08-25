@@ -7,17 +7,20 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\MenuRequest;
 use App\Http\Requests\RoleRequest;
 use App\Services\MenuService;
+use App\Services\ModuleService;
 
 class MenuController extends BaseController
 {
+    protected $module;
     /**
      * Constructor function
      *
      * @param MenuService $menu
      */
-    public function __construct(MenuService $menu)
+    public function __construct(MenuService $menu, ModuleService $module)
     {
         $this->service = $menu;
+        $this->module = $module;
     }
 
     /**
@@ -140,5 +143,6 @@ class MenuController extends BaseController
     public function orderItem(Request $request){
         $menu_item_order = json_decode($request->input('order'));
         $this->service->orderMenu($menu_item_order, null);
+        $this->module->restoreSessionModule();
     }
 }

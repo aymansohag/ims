@@ -6,6 +6,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SettingController;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -86,5 +87,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('bulk-delete', [UserController::class, 'bulkDelete']) -> name('bulk.delete');
         Route::post('change-status', [UserController::class, 'changeStatus']) -> name('change.status');
     });
+    
+    // Setting Route
+    Route::get('setting', [SettingController::class, 'index']) -> name('setting');
+    Route::post('general-setting', [SettingController::class, 'generalSetting']) -> name('general.setting');
+    Route::post('mail-setting', [SettingController::class, 'mailSetting']) -> name('mail.setting');
 
 });

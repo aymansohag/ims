@@ -20,10 +20,10 @@
     height: 100vh !important;
 } */
 .swal2-popup.swal2-toast .swal2-title {
-    font-size: 16px !important;
+    font-size: 14px !important;
 }
 .swal2-popup.swal2-toast .swal2-success {
-    font-size: 16px !important;
+    font-size: 14px !important;
 }
 .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
     width: 500px !important;
@@ -282,8 +282,14 @@ div.dt-button-collection.dropdown-menu{
 .table{
     width: 100% !important;
 }
-#save_btn, #update_btn{
+#save_btn, #update_btn,#mail_save_btn,#general_save_btn{
     padding: 9px 30px
+}
+div#bs-select-2 {
+    max-height: 160px !important;
+}
+div#bs-select-1 {
+    max-height: 200px !important;
 }
 
 

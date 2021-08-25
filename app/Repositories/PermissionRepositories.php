@@ -68,4 +68,8 @@ class PermissionRepositories extends BaseRepositories{
         return $this->model::toBase()->get()->count();
     }
 
+    public function permissionSessionList(){
+        return $this->model->select('slug')->get();
+    }
+
 }

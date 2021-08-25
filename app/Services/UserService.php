@@ -62,22 +62,9 @@ class UserService extends BaseService{
                     $action .= ' <a style="cursor: pointer" class="dropdown-item delete_data" data-name="'.$value->name.'" data-id="'.$value->id.'"><i class="fas fa-trash text-danger"></i> Delete</a>';
                 }
 
-                $btngroup = '<div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-th-list"></i>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    '.$action.'
-                                </div>
-                            </div>';
-
                 $row = [];
                 if(permission('user-bulk-delete')){
-                $row []    = '<div class="custom-control custom-checkbox">
-                                <input value="'.$value->id.'" name="did[]" class="custom-control-input select_data" onchange="selectSingleItem('.$value->id.')" type="checkbox" value="" id="checkBox'.$value->id.'">
-                                <label class="custom-control-label" for="checkBox'.$value->id.'">
-                                </label>
-                            </div>';
+                $row []    = tableCheckBox($value->id);
                 }
                 $row []    = $no;
                 $row []    = $this->avatar($value);
@@ -86,8 +73,8 @@ class UserService extends BaseService{
                 $row []    = $value->email;
                 $row []    = $value->mobile;
                 $row []    = GENDER[$value->gender];
-                $row []    = $value->status == 1 ? '<span class="badge badge-success change_status" data-status="2" data-name="'.$value->name.'" data-id="'.$value->id.'" style="cursor: pointer">Active</span>' :'<span class="badge badge-danger change_status" data-status="1" data-name="'.$value->name.'" data-id="'.$value->id.'" style="cursor: pointer">Iactive</span>';
-                $row []    = $btngroup;
+                $row []    = permission('user-edit') ? changeStatus($value->id,$value->status,$value->name) : STATUS_LABEL[$value->status];
+                $row []    = actionButton($action);
                 $data[]    = $row;
             }
             return $this->datatableDraw($request->input('draw'), $this->user-> countFilter(), $this->user-> countAll(), $data);

@@ -28,4 +28,11 @@ class ModuleRepositories extends BaseRepositories{
         ->with('permission:id,module_id,name','submenu:id,parent_id,module_name')->get();
     }
 
+
+    public function moduleSessionList(){
+        return $this->model::doesntHave('parent')
+        ->orderBy('order','asc')
+        ->with('children')->get();
+    }
+
 }

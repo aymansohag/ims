@@ -13,10 +13,10 @@
   <!-- /meta tags -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Inventory Management System - @yield('title')</title>
+  <title>{{ config('settings.title') ? config('settings.title') : env('APP_NAME') }} - @yield('title')</title>
 
   <!-- Site favicon -->
-  <link rel="shortcut icon" href="{{ asset('assets/default/assets/images/favicon.ico') }}" type="image/x-icon">
+  <link rel="shortcut icon" href="{{ 'storage/'.LOGO_PATH.config('settings.favicon') }}" type="image/x-icon">
   <!-- /site favicon -->
 
   <!-- Font Icon Styles -->

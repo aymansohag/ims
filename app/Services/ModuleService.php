@@ -5,6 +5,7 @@ use App\Repositories\ModuleRepositories as Module;
 use App\Repositories\MenuRepositories as Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class ModuleService extends BaseService{
     protected $menu;
@@ -33,7 +34,15 @@ class ModuleService extends BaseService{
             $collection = $collection -> merge(compact('menu_id','created_at'));
         }
 
-        return $this->module->updateOrCreate(['id' => $request->update_id], $collection->all());
+        $result = $this->module->updateOrCreate(['id' => $request->update_id], $collection->all());
+
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restoreSessionModule();
+            }
+        }
+
+        return $result;
     }
 
     public function edit($menu_id, $module_id){
@@ -43,7 +52,28 @@ class ModuleService extends BaseService{
     }
 
     public function delete($module){
-        return $this->module->delete($module);
+        $result =  $this->module->delete($module);
+
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restoreSessionModule();
+            }
+        }
+
+        return $result;
+    }
+
+    public function restoreSessionModule(){
+        
+        $modules = $this->module->moduleSessionList();
+
+        if(!$modules->isEmpty()){
+            Session::forget('menu');
+            Session::put('menu', $modules);
+            return true;
+        }
+        return false;
+
     }
 
 }

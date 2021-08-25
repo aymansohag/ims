@@ -7,6 +7,7 @@ use App\Repositories\PermissionRepositories as Permission;
 use App\Repositories\ModuleRepositories as Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class PermissionService extends BaseService{
     protected $permission;
@@ -60,30 +61,16 @@ class PermissionService extends BaseService{
                     $action .= ' <a style="cursor: pointer" class="dropdown-item delete_data" data-name="'.$value->name.'" data-id="'.$value->id.'"><i class="fas fa-trash text-danger"></i> Delete</a>';
                 }
 
-
-
-                $btngroup = '<div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-th-list"></i>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    '.$action.'
-                                </div>
-                            </div>';
-
                 $row = [];
                 if(permission('permission-bulk-delete')){
-                    $row []    = ' <div class="custom-control custom-checkbox">
-                                    <input value="'.$value->id.'" name="did[]" class="custom-control-input select_data" onchange="selectSingleItem('.$value->id.')" type="checkbox" value="" id="checkBox'.$value->id.'">
-                                    <label class="custom-control-label" for="checkBox'.$value->id.'">
-                                    </label>
-                                </div>';
+                    $row []    = tableCheckBox($value->id);
                 }
+                
                 $row []    = $no;
                 $row []    = $value->module->module_name;
                 $row []    = $value->name;
                 $row []    = $value->slug;
-                $row []    = $btngroup;
+                $row []    = actionButton ($action);
                 $data[]    = $row;
             }
             return $this->datatableDraw($request->input('draw'), $this->permission-> countFilter(), $this->permission-> countAll(), $data);
@@ -100,7 +87,13 @@ class PermissionService extends BaseService{
                 'created_at' => Carbon::now(),
             ];
         }
-        return $this->permission->insert($permission_data);
+        $result = $this->permission->insert($permission_data);
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restoreSessionPermission();
+            }
+        }
+        return $result;
     }
 
     public function edit(Request $request){
@@ -112,16 +105,57 @@ class PermissionService extends BaseService{
         $updated_at = Carbon::now();
         $collection = $collection -> merge(compact('updated_at'));
 
-        return $this->permission->update($collection->all(), $request->update_id,);
+        $result = $this->permission->update($collection->all(), $request->update_id,);
+
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restoreSessionPermission();
+            }
+        }
+
+        return $result;
     }
 
 
     public function delete(Request $request){
-        return $this->permission->delete($request->id);
+        $result = $this->permission->delete($request->id);
+
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restoreSessionPermission();
+            }
+        }
+
+        return $result;
     }
 
     public function bulkDelete(Request $request){
-        return $this->permission->destroy($request->ids);
+        $result = $this->permission->destroy($request->ids);
+
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restoreSessionPermission();
+            }
+        }
+
+        return $result;
+    }
+
+    public function restoreSessionPermission(){
+        $permissions = $this->permission->permissionSessionList();
+        
+        $permission = [];
+
+        if(!$permissions -> isEmpty()){
+            foreach($permissions as $value){
+                array_push($permission, $value->slug);
+            }
+
+            Session::forget('permission');
+            Session::put('permission', $permission);
+            return true;
+        }
+        return false;
     }
 
 }

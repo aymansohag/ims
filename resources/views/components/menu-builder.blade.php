@@ -2,7 +2,7 @@
     @forelse ($menuItems as $item)
         <li class="dd-item" data-id="{{ $item -> id }}">
             <div class="pull-right item-action">
-                @if (permission('menu-module_add'))
+                @if (permission('menu-module-delete'))
                     <button type="button" onclick="deleteItem('{{ $item->id }}')" class="btn btn-danger btn-sm float-right item_action">
                         <i class="fas fa-trash"></i>
                     </button>
